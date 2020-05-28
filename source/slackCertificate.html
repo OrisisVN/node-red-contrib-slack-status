@@ -1,15 +1,9 @@
 <script type="text/x-red" data-template-name="slackCertificate">
 <div class="form-row">
-  	<label for="node-config-input-email"><i class="fa fa-envelope"></i> Client Email</label>
-	<input type="password" class="input-append-left" id="node-config-input-email" placeholder="xxx@appspot.gserviceaccount.com">
-</div>
-
-<div class="form-row">
-	<label for="node-config-input-secret"><i class="fa fa-key"></i> Private Key</label>
-	<input class="input-append-left" type="password" id="node-config-input-secret" placeholder="-----BEGIN PRIVATE KEY-----">
+	<label for="node-config-input-accesstoken"><i class="fa fa-key"></i>Access Token</label>
+	<input class="input-append-left" type="password" id="node-config-input-accesstoken">
 </div>
 </script>
-
 <script type="text/x-red" data-help-name="slackCertificate">
 	<p>Add certificate to Slack</p>
 </script>
@@ -20,8 +14,7 @@
 		category: 'config',
 		color: "#ffb37a",
 		credentials: {
-			secret: { type: 'password' },
-			email: { type: 'text' }
+			accesstoken: { type: 'password' },
 		},
 
 		label: function () {
@@ -31,7 +24,8 @@
 
 		labelStyle: function () {
 			return this.name ? 'node_label_italic' : '';
+		},
+		oneditprepare: function () {
 		}
-
-	});
+	}); 
 </script>

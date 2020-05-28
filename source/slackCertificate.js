@@ -4,14 +4,11 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, n);
     var node = this;
 
-    this.secret = this.credentials.secret;
-    this.email = this.credentials.email;
-
+    this.accesstoken = this.credentials.accesstoken;
   }
   RED.nodes.registerType("slackCertificate", slackCertificate, {
     credentials: {
-      secret: { type: 'password' },
-      email: { type: 'text' }
+      accesstoken: { type: 'password' }
     }
   });
 };

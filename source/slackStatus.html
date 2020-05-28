@@ -4,17 +4,17 @@
         <input type="text" id="node-input-slackCertificate">
     </div>
     <div class="form-row">
-        <label for="node-input-childpath"><i class="fa fa-sitemap"></i> Status</label>
-        <input type="text" id="node-input-childpath" placeholder="path-to/the/data">
+        <label for="node-input-childpath"><i class="fa fa-sitemap"></i>User Presence</label>
+        <input type="text" id="node-input-childpath" placeholder="">
     </div>
     <div class="form-row">
-        <label for="node-input-method"><i class="fa fa-terminal"></i> Icon</label>
-        <select id="node-input-method" type="text" style="width:70%" text-center>
-        <option value="get" default>1</option>
-        <option value="set">2</option>
-        <option value="push">3</option>
-        <option value="update">4</option>
-        <option value="msg.method">[msg.method]</option>
+        <label for="node-input-emoji">Emoji</label>
+        <select id="node-input-emoji" type="text" style="width:70%" text-center>
+            <option style="background-image:url('https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/241/spiral-calendar_1f5d3.png'); width:20px; height:20px;" value="spiral_calendar_pad" default>Calendar</option>
+            <option value="bus">Commuting</option>
+            <option value="face_with_thermometer">Out sick</option>
+            <option value="palm_tree">Vacationing</option>
+            <option value="msg.method">[msg.method]</option>
         </select>
     </div> 
 </script>
@@ -30,8 +30,7 @@
         color: "#fdd0a2",
         defaults: {
             slackCertificate: { type: 'slackCertificate', required: true },
-            client_email: { value: "" },
-            private_key: { value: "" },
+            accesstoken: { value: "" },
             data: { value: "" },
             childpath: { value: "", validate: RED.validators.typedInput("propertyType") },
             propertyType: { value: "str" },

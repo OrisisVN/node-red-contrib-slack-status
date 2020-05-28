@@ -6,6 +6,8 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, n);
         var node = this;
 
+        var newObj = n.data || {}
+
         var methodValue = n.method
         var childPathProperty = n.childpath || ""
         var propertyType = n.propertyType || "msg";
@@ -13,28 +15,14 @@ module.exports = function (RED) {
         var flowContext = this.context().flow;
 
         var slackCertificate = RED.nodes.getNode(n.slackCertificate);
+        var url_params = "";
 
         node.on("input", function (msg) {
             node.status({});
 
-            // select method 
-            switch (methodValue) {
-                case "set":
-                    methodValue = "PUT"
-                    break;
-                case "push":
-                    methodValue = "POST"
-                    break;
-                case "update":
-                    methodValue = "PATCH"
-                    break;
-                case "remove":
-                    methodValue = "DELETE"
-                    break;
-                default:
-                    methodValue = methodValue
-                    break;
-            }
+            // console.log("methodValue", methodValue);
+            // console.log("propertyType", propertyType);
+            // console.log("childPathProperty", childPathProperty);
 
             // select childPath
             var childPath = "";
@@ -61,16 +49,14 @@ module.exports = function (RED) {
             } else if (methodValue == "msg.method" || methodValue == "") {
                 methodValue = msg.method
             };
-
-            if (typeof msg.payload != 'number') {
-                newObj = msg.payload
-            }
-
-            if (typeof newObj != 'object') {
-                newObj = JSON.parse(newObj)
-            };
-
         })
+    }
+    function requestData(newObj, methodValue, url_params, url_params_childpath, node, msg) {
+        var opts = {
+            method: "POST",
+            url: 'https://slack.com/api/users.profile.set',
+            body: JSON.stringify(newObj)
+        }
     }
 
     RED.nodes.registerType("slackStatus", slackStatus);
