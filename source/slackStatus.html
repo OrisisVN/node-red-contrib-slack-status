@@ -4,7 +4,7 @@
         <input type="text" id="node-input-slackCertificate">
     </div>
     <div class="form-row">
-        <label for="node-input-childpath"><i class="fa fa-sitemap"></i>User Presence</label>
+        <label for="node-input-childpath">User Presence</label>
         <input type="text" id="node-input-childpath" placeholder="">
     </div>
     <div class="form-row">
@@ -15,6 +15,14 @@
             <option value=":face_with_thermometer:">Out sick</option>
             <option value=":palm_tree:">Vacationing</option>
             <option value="msg.emoji">[msg.emoji]</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-expiratione">Status expiration</label>
+        <select id="node-input-expiration" type="text" style="width:70%" text-center>
+            <option value="1" default>1 hour</option>
+            <option value="2">2 hours</option>
+            <option value="msg.expiration">msg.expiration</option>
         </select>
     </div> 
 </script>
@@ -35,7 +43,8 @@
             childpath: { value: "", validate: RED.validators.typedInput("propertyType") },
             propertyType: { value: "str" },
             emoji: { value: "" },
-            newchildpath: { value: "" }
+            newchildpath: { value: "" },
+            expiration: { value: "" }
         },
         inputs: 1,
         outputs: 1,

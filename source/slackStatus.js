@@ -7,22 +7,16 @@ module.exports = function (RED) {
         var node = this;
 
         var flowObj = n.data || {}
-        var request = require('request');
         var methodValue = n.emoji
         var childPathProperty = n.childpath || ""
         var propertyType = n.propertyType || "msg";
         var globalContext = this.context().global;
         var flowContext = this.context().flow;
-
         var slackCertificate = RED.nodes.getNode(n.slackCertificate);
+        var expirationTime = n.expiration;
 
         node.on("input", function (msg) {
             node.status({});
-
-            // console.log("methodValue", methodValue);
-            // console.log("childPathProperty ", childPathProperty)
-            // console.log("propertyType", propertyType);
-
             // select childPath
             var childPath = "";
             switch (propertyType) {
@@ -42,21 +36,38 @@ module.exports = function (RED) {
                     childPath = childPathProperty
                     break;
             }
-            if (methodValue == "setPriority" || methodValue == "setWithPriority") {
-                methodValue = "put"
-            } else if (methodValue == "msg.emoj" || methodValue == "") {
+            if (methodValue == "msg.emoji" || methodValue == "") {
                 methodValue = msg.emoji
-            };
-            requestData(flowObj, methodValue, node, msg, slackCertificate, childPathProperty)
+            }
+            if (expirationTime == "msg.expiration" || expirationTime == "") {
+                expirationTime = msg.expiration
+            } else {
+                var newExpirationTime = Math.round((new Date()).getTime() / 1000);
+                switch (expirationTime) {
+                    case "1":
+                        // Add 1 hour to expiration date
+                        newExpirationTime += 60 * 60;
+                        break;
+                    case "2":
+                        // Add 2 hours to expiration date
+                        newExpirationTime += 120 * 60;
+                        break;
+                    default:
+                        // Default is 0, the status can only be change or delete by user manually.
+                        newExpirationTime = 0;
+                        break;
+                }
+                expirationTime = newExpirationTime;
+            }
+            requestData(flowObj, methodValue, slackCertificate, expirationTime, childPath, node, msg)
         })
-
     }
-    function requestData(flowObj, methodValue, node, msg, slackCertificate, childPathProperty) {
+    function requestData(flowObj, methodValue, slackCertificate, expirationTime, childPath, node, msg, ) {
         var flowObj = {
             "profile": {
-                "status_text": childPathProperty,
+                "status_text": childPath,
                 "status_emoji": methodValue,
-                "status_expiration": 0
+                "status_expiration": expirationTime,
             }
         };
         request({
@@ -69,7 +80,13 @@ module.exports = function (RED) {
             },
             body: flowObj
         }, function (error, response, body) {
-            console.log(response);
+            if (error) {
+                node.error(error, {});
+                node.status({ fill: "red", shape: "ring", text: "failed" });
+            } else {
+                msg.payload = flowObj;
+                node.send(msg);
+            }
         });
     }
 
