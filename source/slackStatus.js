@@ -7,6 +7,7 @@ module.exports = function (RED) {
         var node = this;
 
         var newObj = n.data || {}
+        var request = require('request');
 
         var methodValue = n.method
         var childPathProperty = n.childpath || ""
@@ -43,20 +44,39 @@ module.exports = function (RED) {
                     childPath = childPathProperty
                     break;
             }
-
             if (methodValue == "setPriority" || methodValue == "setWithPriority") {
                 methodValue = "put"
             } else if (methodValue == "msg.method" || methodValue == "") {
                 methodValue = msg.method
             };
         })
+        // var testObj = {
+        //     "profile": {
+        //         "status_text": "Traveling",
+        //         "status_emoji": ":palm_tree:",
+        //         "status_expiration": 0
+        //     }
+        // };
+        // request({
+        //     url: "https://slack.com/api/users.profile.set",
+        //     method: "POST",
+        //     json: true,
+        //     headers: {
+        //         "Content-type": "application/json; charset=utf-8",
+        //         "Authorization": "Bearer " + slackCertificate['accesstoken'],
+        //     },
+        //     body: testObj
+        // }, function (error, response, body) {
+        //     console.log(response);
+        // });
     }
     function requestData(newObj, methodValue, url_params, url_params_childpath, node, msg) {
-        var opts = {
-            method: "POST",
-            url: 'https://slack.com/api/users.profile.set',
-            body: JSON.stringify(newObj)
-        }
+        //     var opts = {
+        //         method: 'POST',
+        //         url: 'https://slack.com/api/users.profile.set',
+        //         body: JSON.stringify(newObj)
+        //     }
+        console.log(slackCertificate['accesstoken'])
     }
 
     RED.nodes.registerType("slackStatus", slackStatus);
